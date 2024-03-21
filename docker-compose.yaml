@@ -1,0 +1,28 @@
+services:
+  cooking-book:
+    image: cooking-book
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/recipes
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "2001:8090"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: recipes
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 20s
+      retries: 10
