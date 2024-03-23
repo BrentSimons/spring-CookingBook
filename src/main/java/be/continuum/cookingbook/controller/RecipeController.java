@@ -9,6 +9,10 @@ import be.continuum.cookingbook.exception.BadRequestException;
 import be.continuum.cookingbook.model.Ingredient;
 import be.continuum.cookingbook.model.Recipe;
 import be.continuum.cookingbook.service.RecipeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -26,18 +30,27 @@ public class RecipeController {
     private final RecipeJsonConverter recipeJsonConverter;
     private final IngredientJsonConvertor ingredientJsonConvertor;
 
+    @Operation(summary = "Gets all recipes", tags = {"Recipes"})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Recipe Found"),
+            @ApiResponse(responseCode = "404", description = "Recipe Not Found", content = @Content)})
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<RecipeJson> getRecipe() {
         return recipeConverter.convert(recipeService.find());
     }
 
+    @Operation(summary = "Gets a recipe by uuid", tags = {"Recipes"})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Recipe Found"),
+            @ApiResponse(responseCode = "404", description = "Recipe Not Found", content = @Content)})
     @GetMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
     public RecipeJson getRecipeByUuid(@PathVariable("uuid") String uuid) {
         return recipeConverter.convert(recipeService.findByUuid(uuid));
     }
 
+    @Operation(summary = "Creates a recipe", tags = {"Recipes"})
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Recipe Created"),
+        @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public RecipeJson createRecipe(@Valid @RequestBody RecipeJson newRecipeJson) {
@@ -50,19 +63,28 @@ public class RecipeController {
         return recipeConverter.convert(recipeService.create(recipe));
     }
 
+    @Operation(summary = "Updates a recipe", tags = {"Recipes"})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Recipe Updated"),
+        @ApiResponse(responseCode = "404", description = "Recipe Not Found", content = @Content)})
     @PutMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public RecipeJson updateRecipe(@PathVariable("uuid") String uuid,@Valid @RequestBody RecipeJson updateRecipeJson) {
+    public RecipeJson updateRecipe(@PathVariable("uuid") String uuid, @Valid @RequestBody RecipeJson updateRecipeJson) {
         Recipe updateRecipe = recipeJsonConverter.convert(updateRecipeJson);
         return recipeConverter.convert(recipeService.update(uuid, updateRecipe));
     }
 
+    @Operation(summary = "Deletes a recipe", tags = {"Recipes"})
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Recipe Deleted"),
+        @ApiResponse(responseCode = "404", description = "Recipe Not Found", content = @Content)})
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRecipe(@PathVariable("uuid") String uuid) {
         recipeService.delete(uuid);
     }
 
+    @Operation(summary = "Adds an ingredient to a recipe", tags = {"Recipes"})
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Ingredient Added"),
+        @ApiResponse(responseCode = "404", description = "Recipe Not Found", content = @Content)})
     @PostMapping("/{recipeUuid}/ingredients")
     @ResponseStatus(HttpStatus.CREATED)
     public RecipeJson addIngredientToRecipe(@PathVariable("recipeUuid") String recipeUuid, @Valid @RequestBody IngredientJson ingredientJson) {
@@ -71,6 +93,9 @@ public class RecipeController {
         return recipeConverter.convert(recipeService.addIngredientToRecipe(recipeUuid, newIngredient));
     }
 
+    @Operation(summary = "Removes an ingredient from a recipe", tags = {"Recipes"})
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Ingredient Removed"),
+            @ApiResponse(responseCode = "404", description = "Ingredient Not Found", content = @Content)})
     @DeleteMapping("/{recipeUuid}/ingredients/{ingredientUuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public RecipeJson removeIngredientFromRecipe(@PathVariable("recipeUuid") String recipeUuid, @PathVariable("ingredientUuid") String ingredientUuid) {
@@ -79,6 +104,9 @@ public class RecipeController {
 
     // Better solution would be to use criteria API for this.
     // Also, this all should be moved to the service but for the purposes of this exercise it's out of scope.
+    @Operation(summary = "Searches for recipes", tags = {"Recipes"})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Recipes Found"),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)})
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public List<RecipeJson> searchRecipe(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "year", required = false) Integer yearFilter, @RequestParam(value = "yearEnd", required = false) Integer yearEnd) {

@@ -1,6 +1,5 @@
 package be.continuum.cookingbook.service;
 
-import be.continuum.cookingbook.convertor.IngredientJsonConvertor;
 import be.continuum.cookingbook.model.Ingredient;
 import be.continuum.cookingbook.repository.IngredientRepository;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class IngredientService {
     private final IngredientRepository ingredientRepository;
-    private final IngredientJsonConvertor ingredientJsonConvertor;
 
     public List<Ingredient> find() {
         return ingredientRepository.findAll();

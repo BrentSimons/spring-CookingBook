@@ -4,7 +4,6 @@ import be.continuum.cookingbook.validation.YearValidator;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.Year;
 import java.util.List;

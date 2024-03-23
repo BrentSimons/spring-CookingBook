@@ -1,21 +1,15 @@
 package be.continuum.cookingbook.service;
 
-import be.continuum.cookingbook.model.Genre;
 import be.continuum.cookingbook.model.Ingredient;
 import be.continuum.cookingbook.model.Recipe;
 import be.continuum.cookingbook.repository.IngredientRepository;
 import be.continuum.cookingbook.repository.RecipeRepository;
-import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Year;
 import java.util.List;
 import java.util.UUID;
-
-import static be.continuum.cookingbook.factory.IngredientFactory.createIngredient;
-import static be.continuum.cookingbook.factory.RecipeFactory.createRecipe;
 
 @Service
 @AllArgsConstructor
