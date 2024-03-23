@@ -42,6 +42,10 @@ mvn spring-boot:run
 
 The application will start running at `http://localhost:8090`.
 
+#### Swagger
+
+This project uses Springdoc OpenAPI to generate an API documentation. You can access the Swagger UI at `http://localhost:8090/swagger-ui.html`.
+
 ## Configuration
 
 The application's configuration is located in `src/main/resources/application.yaml`. Here you can change the server port, database connection details, and other Spring Boot settings.
